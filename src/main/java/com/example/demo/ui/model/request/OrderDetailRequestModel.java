@@ -1,28 +1,29 @@
 package com.example.demo.ui.model.request;
 
 public class OrderDetailRequestModel {
-	private String order;
-	private String user;
-	private String date;
+	private String orderContent;
+	private String orderClient;
+	private String orderDate;
 	private double cost;
 	
-	public String getOrder() {
-		return order;
+	
+	public String getOrderContent() {
+		return orderContent;
 	}
-	public void setOrder(String order) {
-		this.order = order;
+	public void setOrderContent(String orderContent) {
+		this.orderContent = orderContent;
 	}
-	public String getUser() {
-		return user;
+	public String getOrderClient() {
+		return orderClient;
 	}
-	public void setUser(String user) {
-		this.user = user;
+	public void setOrderClient(String orderClient) {
+		this.orderClient = orderClient;
 	}
-	public String getDate() {
-		return date;
+	public String getOrderDate() {
+		return orderDate;
 	}
-	public void setDate(String date) {
-		this.date = date;
+	public void setOrderDate(String orderDate) {
+		this.orderDate = orderDate;
 	}
 	public double getCost() {
 		return cost;

@@ -1,5 +1,8 @@
 package com.example.demo.ui.controller;
 
+import java.lang.reflect.Array;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import org.springframework.beans.BeanUtils;
@@ -10,9 +13,12 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.view.RedirectView;
 
 import com.example.demo.entity.PizzaEntity;
+import com.example.demo.service.OrderService;
 import com.example.demo.service.PizzaService;
+import com.example.demo.shared.OrderDto;
 import com.example.demo.shared.PizzaDto;
 import com.example.demo.shared.UserDto;
 import com.example.demo.ui.model.request.PizzaDetailsRequestModel;
@@ -26,11 +32,14 @@ public class PizzaController {
 	@Autowired
 	PizzaService pizzaService;
 	
+	@Autowired
+	OrderService orderService;
+	
 	@GetMapping
-	public String get() {
+	public String getPizzaMenu() {
 		ArrayList<PizzaEntity> pizzas = new ArrayList<PizzaEntity>();
 		
-		String menu = " <select>\n" + 
+		String menu = "_amount\">\n" + 
 				"  <option value=\"0\">0</option>\n" + 
 				"  <option value=\"1\">1</option>\n" + 
 				"  <option value=\"2\">2</option>\n" + 
@@ -47,21 +56,59 @@ public class PizzaController {
 		
 		String site = "<h1><a href=\"http://localhost:8080/orders\">ZAMÓWIENIA</a></h1>";
 		
-		site = site + "<table style=\"border-color: black; float: left;\" border=\"black\" cellspacing=\"5\" cellpadding=\"5\"><tbody>";
+		site = site + "<form><table style=\"border-color: black; float: left;\" border=\"black\" cellspacing=\"5\" cellpadding=\"5\"><tbody>";
 		
+		int i = 0;
 		for(PizzaEntity x : pizzas) {
-			site = site + "<tr><td>" + x.getName() + "</td><td>" + x.getIngredients() + "</td><td>" + menu + "</td></tr>";
+			site = site + "<tr><td>" + x.getName() + "</td><td>" + x.getIngredients() + "</td><td> <select name=\"" + i + menu + "</td></tr>";
+			i++;
 		}
 		site = site + "</tbody></table><hr>";
 		
-		site = site + "<p><button type=\"\\&quot;button\\&quot;\">ZAMÓW!</button></p>";
+		site = site + "<p><button type=\"submit\" formmethod=\"post\">ZAMÓW!</button></p></form>";
+//		site = site + "<p><button type=\"submit\">ZAMÓW!</button></p></form>";
 		
 		return site;
 	}
 
 	@PostMapping
-	public String order() {		
-		return "MENU POST!";
+	public RedirectView place_order(@RequestBody String cos) {
+		String[] arguments = cos.split("&");
+		int size = Array.getLength(arguments);
+		
+		ArrayList<String[]> values = new ArrayList<String[]>();
+		for(int i = 0; i < size; i++) {
+			values.add(arguments[i].split("="));
+		}
+		
+		String result = "";
+		
+		for(int i = 0; i < size; i++) {
+			result = result + values.get(i)[1];
+		}
+		
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+		LocalDateTime now = LocalDateTime.now();
+		
+		OrderDto order = new OrderDto();
+		order.setOrderClient("None");
+		order.setOrderContent(result);
+		order.setOrderDate(dtf.format(now));
+		
+		ArrayList<PizzaEntity> pizzas = new ArrayList<PizzaEntity>();
+		pizzas = pizzaService.getPizzas();
+		
+		double cost = 0;
+		
+		for(int i = 0; i < size; i++) {
+			cost = cost + (pizzas.get(i).getPrice() * Double.parseDouble(values.get(i)[1]));
+		}
+		
+		order.setCost(cost);
+		
+		orderService.createOrder(order);
+		
+		return new RedirectView("orders");
 	}
 	
 	@PutMapping

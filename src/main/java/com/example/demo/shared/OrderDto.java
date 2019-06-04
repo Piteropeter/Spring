@@ -1,6 +1,10 @@
-package com.example.demo.ui.model.response;
+package com.example.demo.shared;
 
-public class OrderRest {
+import java.io.Serializable;
+
+public class OrderDto implements Serializable{
+	private static final long serialVersionUID = 4451191308304923528L;
+
 	private String orderContent;
 	private String orderClient;
 	private String orderDate;
@@ -32,3 +36,4 @@ public class OrderRest {
 		this.cost = cost;
 	}
 }
+
