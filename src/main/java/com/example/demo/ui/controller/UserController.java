@@ -23,9 +23,8 @@ public class UserController {
 	
 	@GetMapping
 	public String getUser() {
-		return "<!-- #######  YAY, I AM THE SOURCE EDITOR! #########-->\n" + 
-				"<p><button type=\"button\">Click Me!</button></p>\n" + 
-				"<h1 style=\"color: #5e9ca0;\">You can edit <span style=\"color: #2b2301;\">this demo</span> text!</h1>";
+		return "<h1><a href=\"http://localhost:8080/menu\">MENU</a></h1>\n" + 
+				"<p><button type=\"\\&quot;button\\&quot;\">Click Me!</button></p>";
 	}
 
 	@PostMapping
