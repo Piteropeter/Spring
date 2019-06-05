@@ -21,6 +21,7 @@ import com.example.demo.service.PizzaService;
 import com.example.demo.shared.OrderDto;
 import com.example.demo.shared.PizzaDto;
 import com.example.demo.shared.UserDto;
+import com.example.demo.shared.Utils;
 import com.example.demo.ui.model.request.PizzaDetailsRequestModel;
 import com.example.demo.ui.model.response.PizzaRest;
 import com.example.demo.ui.model.response.UserRest;
@@ -34,6 +35,9 @@ public class PizzaController {
 	
 	@Autowired
 	OrderService orderService;
+	
+	@Autowired
+	Utils utils;
 	
 	@GetMapping
 	public String getPizzaMenu() {
@@ -91,7 +95,13 @@ public class PizzaController {
 		LocalDateTime now = LocalDateTime.now();
 		
 		OrderDto order = new OrderDto();
-		order.setOrderClient("None");
+		
+		if(utils.getCurrentUserEmail().equals("")) {
+			order.setOrderClient("None");
+		}
+		else {
+			order.setOrderClient(utils.getCurrentUserEmail());
+		}
 		order.setOrderContent(result);
 		order.setOrderDate(dtf.format(now));
 		

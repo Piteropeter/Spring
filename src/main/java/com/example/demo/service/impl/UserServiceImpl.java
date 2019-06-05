@@ -1,5 +1,7 @@
 package com.example.demo.service.impl;
 
+import java.nio.charset.StandardCharsets;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -47,12 +49,16 @@ public class UserServiceImpl implements UserService {
 		String email = user.getEmail();
 		String password = user.getPassword();
 		UserEntity userEntity = new UserEntity();
+		email = java.net.URLDecoder.decode(email, StandardCharsets.UTF_8);
+
 		userEntity = userRepository.findByEmail(email);
-		if(userEntity == null) 
-			throw new RuntimeException("User does not exist");
 		
-		if(password != userEntity.getEncryptedPassword())
-			throw new RuntimeException("Wrong password");
+		if(userEntity == null) 
+			throw new RuntimeException("User " + email + " does not exist");
+		password = userEntity.getEncryptedPassword();
+
+		if(!password.equals(userEntity.getEncryptedPassword()))
+			throw new RuntimeException("Wrong password: " + password + "    valid: " + userEntity.getEncryptedPassword());
 		
 		Utils.setCurrentUserEmail(email);
 		
