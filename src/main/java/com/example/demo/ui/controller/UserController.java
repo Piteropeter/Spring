@@ -116,12 +116,23 @@ public class UserController {
 		String lastName = arguments[1].split("=")[1]; 
 		String email = arguments[2].split("=")[1]; 
 		String psw = arguments[3].split("=")[1]; 
-		String psw_repeat = arguments[4].split("=")[1]; 
+		String psw_repeat = arguments[4].split("=")[1];
+		
+		if(!(psw.equals(psw_repeat)))
+			return "Hasła różnią się";
+		
+		UserDetailsRequestModel userDetailsRequestModel = new UserDetailsRequestModel();
+		userDetailsRequestModel.setFirstName(firstName);
+		userDetailsRequestModel.setLastName(lastName);
+		userDetailsRequestModel.setEmail(email);
+		userDetailsRequestModel.setPassword(psw);
 
-		return dane;
+		UserRest userRest = new UserRest();
+		userRest = createUser(userDetailsRequestModel);
+		if(userRest==null) 
+			return "Błąd rejestracji";
+		
+		return "Zarejestrowano poprawnie";
 	}
-	
-
-	
 	
 }

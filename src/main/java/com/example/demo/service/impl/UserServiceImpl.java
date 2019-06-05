@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
 		if(userEntity == null) 
 			throw new RuntimeException("User does not exist");
 		
-		if(password != userEntity.getEncryptedPassword())
+		if(!(password.equals(userEntity.getEncryptedPassword())))
 			throw new RuntimeException("Wrong password");
 		
 		Utils.setCurrentUserEmail(email);
