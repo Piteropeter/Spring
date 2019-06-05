@@ -2,15 +2,22 @@ package com.example.demo.ui.controller;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.UserRepository;
+import com.example.demo.entity.UserEntity;
 import com.example.demo.service.UserService;
+import com.example.demo.service.impl.UserServiceImpl;
 import com.example.demo.shared.UserDto;
+import com.example.demo.shared.Utils;
 import com.example.demo.ui.model.request.UserDetailsRequestModel;
+import com.example.demo.ui.model.request.UserLoginRequestModel;
 import com.example.demo.ui.model.response.UserRest;
 
 @RestController
@@ -66,11 +73,21 @@ public class UserController {
 	public String login(@RequestBody String dane) {
 		String[] arguments = dane.split("&");
 		String email = arguments[0].split("=")[1];
-		String password = arguments[0].split("=")[1]; 
+		String password = arguments[0].split("=")[1];
+		UserLoginRequestModel userLoginData = new UserLoginRequestModel();
+		userLoginData.setEmail(email);
+		userLoginData.setPassword(password);
+		UserDto userDto = new UserDto();
+		
+		BeanUtils.copyProperties(userLoginData, userDto);
+		
+		UserDto loggedUser = userService.logInUser(userDto);
+		
 
-
-		return dane;
+		if(loggedUser == null) return "Błędne dane";
+			return "Zalogowano poprawnie";
 	}
+
 
 	@GetMapping("/registration")
     public String registration() {

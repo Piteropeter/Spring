@@ -11,6 +11,7 @@ public class Utils {
 	private final String ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 //	private final int ITERATIONS = 10000;
 //	private final int KEY_LENGTH = 256;
+	private static String currentUserEmail = null;
 
 	public String generateUserId(int length) {
 		return generateRandomString(length);
@@ -24,5 +25,12 @@ public class Utils {
 		}
 		
 		return new String(returnValue);
+	}
+	public String getCurrentUserEmail() {
+		return currentUserEmail;
+	}
+
+	public static void setCurrentUserEmail(String loggedUserEmail) {
+		currentUserEmail = loggedUserEmail;
 	}
 }

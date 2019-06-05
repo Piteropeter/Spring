@@ -2,6 +2,8 @@ package com.example.demo.service.impl;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.UserRepository;
@@ -18,6 +20,7 @@ public class UserServiceImpl implements UserService {
 	
 	@Autowired
 	Utils utils;
+
 	
 	@Override
 	public UserDto createUser(UserDto user) {
@@ -28,12 +31,8 @@ public class UserServiceImpl implements UserService {
 		BeanUtils.copyProperties(user, userEntity);
 		
 		String publicUserId = utils.generateUserId(30);
-		userEntity.setEncryptedPassword("test");
 		userEntity.setUserId(publicUserId);
-		
-//		if(userRepository == null) {
-//			throw new InternalError("USER REPOSITORY IS NULL");
-//		}
+		userEntity.setEncryptedPassword(user.getPassword());
 		
 		UserEntity storedUserDetails = userRepository.save(userEntity);
 		
@@ -42,5 +41,25 @@ public class UserServiceImpl implements UserService {
 		
 		return returnValue;
 	}
-
+	
+	@Override
+	public UserDto logInUser(UserDto user) {
+		String email = user.getEmail();
+		String password = user.getPassword();
+		UserEntity userEntity = new UserEntity();
+		userEntity = userRepository.findByEmail(email);
+		if(userEntity == null) 
+			throw new RuntimeException("User does not exist");
+		
+		if(password != userEntity.getEncryptedPassword())
+			throw new RuntimeException("Wrong password");
+		
+		Utils.setCurrentUserEmail(email);
+		
+		UserDto returnValue = new UserDto();
+		BeanUtils.copyProperties(userEntity, returnValue);
+		
+		return returnValue;
+	}
+	
 }
