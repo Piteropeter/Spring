@@ -64,7 +64,7 @@ public class PizzaController {
 		
 		int i = 0;
 		for(PizzaEntity x : pizzas) {
-			site = site + "<tr><td>" + x.getName() + "</td><td>" + x.getIngredients() + "</td><td> <select name=\"" + i + menu + "</td></tr>";
+			site = site + "<tr><td>" + x.getName() + "</td><td>" + x.getIngredients() + "</td><td>" + x.getPrice() + "</td><td><select name=\"" + i + menu + "</td></tr>";
 			i++;
 		}
 		site = site + "</tbody></table><hr>";

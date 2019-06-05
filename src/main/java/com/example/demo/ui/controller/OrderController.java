@@ -30,7 +30,7 @@ public class OrderController {
 		site = site + "<form><table style=\"border-color: black; float: left;\" border=\"black\" cellspacing=\"5\" cellpadding=\"5\"><tbody>";
 		
 		for(OrderEntity x : orders) {
-			site = site + "<tr><td>" + x.getOrderClient() + "</td><td>" + x.getOrderDate() + "</td><td>" + x.getOrderContent() + "</td><td>" + x.getCost() + "</td></tr>";
+			site = site + "<tr><td>" + x.getOrderClient() + "</td><td>" + x.getOrderDate() + "</td><td>" + x.getOrderContent() + "</td><td>" + String.format("%.2f", x.getCost()) + "</td></tr>";
 		}
 		site = site + "</tbody></table><hr>";
 

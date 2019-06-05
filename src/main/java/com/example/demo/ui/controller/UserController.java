@@ -1,5 +1,7 @@
 package com.example.demo.ui.controller;
 
+import java.nio.charset.StandardCharsets;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -85,7 +87,8 @@ public class UserController {
 		
 
 		if(loggedUser == null) return "Błędne dane";
-			return "Zalogowano poprawnie";
+			return "Zalogowano poprawnie\n"+
+		"<h1><a href=\"http://localhost:8080/menu\">MENU</a></h1>";
 	}
 
 
@@ -118,6 +121,8 @@ public class UserController {
 		String psw = arguments[3].split("=")[1]; 
 		String psw_repeat = arguments[4].split("=")[1];
 		
+		email = java.net.URLDecoder.decode(email, StandardCharsets.UTF_8);
+		
 		if(!(psw.equals(psw_repeat)))
 			return "Hasła różnią się";
 		
@@ -132,7 +137,8 @@ public class UserController {
 		if(userRest==null) 
 			return "Błąd rejestracji";
 		
-		return "Zarejestrowano poprawnie";
+		return "Zarejestrowano poprawnie\n"
+				+ "<h1><a href=\"http://localhost:8080/login\">LOGIN</a></h1>";
 	}
 	
 }
