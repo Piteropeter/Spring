@@ -96,11 +96,16 @@ public class PizzaController {
 		
 		OrderDto order = new OrderDto();
 		
-		if(utils.getCurrentUserEmail().equals("")) {
+		if(utils.getCurrentUserEmail() == null) {
 			order.setOrderClient("None");
 		}
 		else {
-			order.setOrderClient(utils.getCurrentUserEmail());
+			if(utils.getCurrentUserEmail().isBlank()) {
+				order.setOrderClient("None");
+			}
+			else {
+				order.setOrderClient(utils.getCurrentUserEmail());
+			}
 		}
 		order.setOrderContent(result);
 		order.setOrderDate(dtf.format(now));
